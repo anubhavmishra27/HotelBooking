@@ -31,6 +31,14 @@ public class Price {
 	public void setFinalAmount(double finalAmount) {
 		this.finalAmount = finalAmount;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Price [totalAmount=").append(totalAmount).append(", tax=").append(tax).append(", finalAmount=")
+				.append(finalAmount).append("]");
+		return builder.toString();
+	}
 	
 	
 

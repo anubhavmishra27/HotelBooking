@@ -64,6 +64,15 @@ public class BookingDetails {
 	public void setPrice(Price price) {
 		this.price = price;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BookingDetails [name=").append(name).append(", room=").append(room).append(", slots=")
+				.append(slots).append(", from=").append(from).append(", to=").append(to).append(", price=")
+				.append(price).append("]");
+		return builder.toString();
+	}
 	
 	
 	

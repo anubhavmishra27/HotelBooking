@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.stereotype.Component;
+import org.w3c.dom.ls.LSInput;
 
 import com.springboot.hotel.bookhere.inventory.service.model.InventoryLoadRequest;
 import com.springboot.hotel.bookhere.model.Room;
@@ -54,12 +57,23 @@ public class RoomInventoryInMemImpl implements RoomInventory {
 	}
 
 	@Override
-	public void bookRooms(List<Slot> slots) {
+	public List<Slot> bookRooms(List<Slot> slots) {
+		List<Slot> resultSlots = new ArrayList<Slot>();
 		for(Slot slot : slots) {
+			if(!this.slots.containsKey(slot.getId())) {
+				throw new RuntimeException("Not a valid slot");
+			}
+			if(this.slots.get(slot.getId()).isBooked()) {
+				throw new RuntimeException("Its already booked");
+			}
 			Slot slotResult = this.slots.get(slot.getId());	
 			slotResult.setBooked(true);
+			resultSlots.add(slotResult);
 		}
+		return resultSlots;
 		
 	}
+
+	
 
 }
