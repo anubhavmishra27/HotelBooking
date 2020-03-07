@@ -7,7 +7,7 @@ import com.springboot.hotel.bookhere.model.Room;
 
 public class BookingRequest {
 	
-	private Room room;
+	private String roomId;
 	
 	private List<String> slotIds;
 	
@@ -19,12 +19,12 @@ public class BookingRequest {
 	
 	
 	
-	public Room getRoom() {
-		return room;
+	public String getRoomId() {
+		return roomId;
 	}
 
-	public void setRoom(Room room) {
-		this.room = room;
+	public void setRoomId(String roomId) {
+		this.roomId = roomId;
 	}
 
 	public List<String> getSlotIds() {

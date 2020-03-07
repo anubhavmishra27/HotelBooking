@@ -23,14 +23,28 @@ public class HotelAggregatorInMemImpl implements HotelAggregator{
 	@Override
 	public void addRoomType(long hotelId, Room room) {
 		if(hotels.containsKey(hotelId)) {
-			hotels.get(hotelId).getRooms().add(room);
-		}
+			 List<Room> rooms = hotels.get(hotelId).getRooms();
+			 rooms.add(room);
+			 hotels.get(hotelId).setRooms(rooms);
+			 }
 		
 	}
 
 	@Override
 	public List<Hotel> listHotels() {
 		return new ArrayList<Hotel>(hotels.values());
+	}
+
+	@Override
+	public Room findRoomById(long roomId) {
+		return hotels
+				.values()
+				.stream()
+				.flatMap(hotel -> hotel.getRooms().stream())
+				.filter(room -> room.getRoomId() == roomId)
+				.findFirst()
+				.orElse(null);
+				
 	}
 
 }

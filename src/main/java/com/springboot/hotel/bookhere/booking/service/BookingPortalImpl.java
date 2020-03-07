@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.springboot.hotel.bookhere.booking.service.model.BookingRequest;
 import com.springboot.hotel.bookhere.hotel.service.HotelAggregator;
@@ -12,7 +13,9 @@ import com.springboot.hotel.bookhere.inventory.service.RoomInventory;
 import com.springboot.hotel.bookhere.model.BookingDetails;
 import com.springboot.hotel.bookhere.model.Room;
 import com.springboot.hotel.bookhere.model.Slot;
+import com.springboot.hotel.bookhere.pricing.service.Pricing;
 
+@Component
 public class BookingPortalImpl  implements BookingPortal{
 	
 	@Autowired
@@ -20,6 +23,9 @@ public class BookingPortalImpl  implements BookingPortal{
 	
 	@Autowired
 	private RoomInventory roomInventory;
+	
+	@Autowired
+	private Pricing pricing;
 
 	@Override
 	public List<Room> listRooms(long hotelId) {
@@ -39,6 +45,12 @@ public class BookingPortalImpl  implements BookingPortal{
 	@Override
 	public BookingDetails book(BookingRequest bookingRequest) {
 		
+		Room room = aggregator.findRoomById(Long.valueOf(bookingRequest.getRoomId()));
+		if(room == null) {
+			throw new IllegalArgumentException("Room Not Found");
+		}
+		
+		
 		List<Slot> slots = bookingRequest
 		.getSlotIds()
 		.stream()
@@ -46,13 +58,15 @@ public class BookingPortalImpl  implements BookingPortal{
 		.map(slotId -> new Slot(slotId))
 		.collect(Collectors.toList());
 		
-		roomInventory.bookRooms(slots);
+		slots = roomInventory.bookRooms(slots);
 		
 		BookingDetails bookingDetails = new BookingDetails();
 		bookingDetails.setFrom(bookingRequest.getFrom());
 		bookingDetails.setTo(bookingRequest.getTo());
 		bookingDetails.setSlots(slots);
-		bookingDetails.setRoom(bookingRequest.getRoom());
+		bookingDetails.setRoom(room);
+		
+		bookingDetails = pricing.price(bookingDetails);
 		
 		return bookingDetails;
 		

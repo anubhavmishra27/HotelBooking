@@ -13,7 +13,7 @@ public interface RoomInventory {
 	
 	List<Slot> findSlots(Room room, LocalDate from , LocalDate to );
 	
-	void bookRooms(List<Slot> rooms);
+	List<Slot> bookRooms(List<Slot> rooms);
 	
 
 }

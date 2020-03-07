@@ -13,4 +13,6 @@ public interface HotelAggregator {
 	
 	void addRoomType(long hotelId, Room room);
 	
+	Room findRoomById(long roomId);
+	
 }
